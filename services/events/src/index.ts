@@ -1,10 +1,13 @@
 import express from "express";
 import { pool } from "./db";
+import eventsRouter from "./routes/events";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
 
 app.use(express.json());
+
+app.use("/events", eventsRouter);
 
 // Liveness + DB connectivity check. Proves the service can reach Postgres.
 app.get("/health", async (_req, res) => {

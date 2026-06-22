@@ -11,6 +11,9 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      # Schema is applied automatically on first boot (empty volume only).
+      # Re-apply after edits with: docker compose down -v && docker compose up --build
+      - ./services/events/db/init:/docker-entrypoint-initdb.d:ro
     # Compose waits for this before starting services that depend_on it.
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U app -d tickets"]

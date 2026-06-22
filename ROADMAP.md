@@ -63,7 +63,7 @@ problem before applying the textbook solution, then stack the next concept.
 ~1–1.5 weeks per phase evenings/weekends → ~6–9 weeks. Slow down on Phase 3.
 
 ### Progress
-- [ ] Phase 0 — Foundations
+- [x] Phase 0 — Foundations
 - [ ] Phase 1 — Events Service
 - [ ] Phase 2 — Auth & Security
 - [ ] Phase 3 — Booking (concurrency)

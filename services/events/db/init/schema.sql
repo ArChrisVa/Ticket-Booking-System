@@ -24,7 +24,7 @@ CREATE TABLE events (
     created_at  timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_events_city_category_event_date ON events (city, category, event_date);
+CREATE INDEX idx_events_city_category_date ON events (city, category, event_date);
 -- ---------------------------------------------------------------------------
 -- seats: child of events (one event has many seats). Phase 3 will fight over
 -- the `status` column when we tackle the overselling race condition.

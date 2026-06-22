@@ -1,0 +1,36 @@
+# Phase 0 — Postgres + the Events service.
+# More services (auth, booking, notification, gateway, rabbitmq) get added in later phases.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: tickets
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # Compose waits for this before starting services that depend_on it.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d tickets"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  events:
+    build: ./services/events
+    environment:
+      DATABASE_URL: postgres://app:app@postgres:5432/tickets
+      PORT: "3001"
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    # Mount source for hot-reload in dev (tsx watch). node_modules stays in the image.
+    volumes:
+      - ./services/events/src:/app/src
+
+volumes:
+  pgdata:

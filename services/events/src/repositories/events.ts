@@ -3,7 +3,7 @@ import { pool } from '../db';
 
 // Insert new event
 
-export const InsertEvent = async (event :
+export const insertEvent = async (event :
     {
         name: string; 
         category: string; 
@@ -23,7 +23,7 @@ export const InsertEvent = async (event :
 
 // Fetch event by id
 
-export const GetEventById = async (id: string) => {
+export const getEventById = async (id: string) => {
     const result = await pool.query(
         `SELECT id, name, category, city, venue, event_date, created_at
          FROM events
@@ -36,7 +36,7 @@ export const GetEventById = async (id: string) => {
 };
 
 // find events by optional filters
-export const FindEvents = async (filters : 
+export const findEvents = async (filters : 
     {
         city?: string;
         category?: string;

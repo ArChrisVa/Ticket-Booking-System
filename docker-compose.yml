@@ -38,5 +38,42 @@ services:
     volumes:
       - ./services/events/src:/app/src
 
+  # --- Auth service + its OWN Postgres (database-per-service, low coupling) ---
+  auth-postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: auth
+    # Host 5434 -> container 5432 (5432 = native PG, 5433 = events PG).
+    ports:
+      - "5434:5432"
+    volumes:
+      - authpgdata:/var/lib/postgresql/data
+      - ./services/auth/db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d auth"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  auth:
+    build: ./services/auth
+    # Loads JWT_SECRET (gitignored, local-only). Copy services/auth/.env.example
+    # to services/auth/.env on a fresh checkout.
+    env_file:
+      - ./services/auth/.env
+    environment:
+      DATABASE_URL: postgres://app:app@auth-postgres:5432/auth
+      PORT: "3002"
+    ports:
+      - "3002:3002"
+    depends_on:
+      auth-postgres:
+        condition: service_healthy
+    volumes:
+      - ./services/auth/src:/app/src
+
 volumes:
   pgdata:
+  authpgdata:

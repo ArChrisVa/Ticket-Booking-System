@@ -26,6 +26,9 @@ services:
 
   events:
     build: ./services/events
+    # Shared JWT_SECRET (gitignored) so events can VERIFY tokens auth issued.
+    env_file:
+      - ./services/events/.env
     environment:
       DATABASE_URL: postgres://app:app@postgres:5432/tickets
       PORT: "3001"

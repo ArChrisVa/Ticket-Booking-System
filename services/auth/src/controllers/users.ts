@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { registerUser } from '../services/users';
+import { registerUser, loginUser } from '../services/users';
 
 const register = async (req: Request, res: Response) =>
     {
@@ -12,4 +12,14 @@ const register = async (req: Request, res: Response) =>
 
     };
 
-export { register };
+const login = async (req: Request, res: Response) =>
+    {
+        try {
+            const result  = await loginUser(req.body)
+            res.status(200).json(result);
+        }catch(err) {
+            res.status(401).json({ error: (err as Error).message });
+        }
+    }
+
+export { register, login };

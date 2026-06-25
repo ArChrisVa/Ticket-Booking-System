@@ -77,6 +77,42 @@ services:
     volumes:
       - ./services/auth/src:/app/src
 
+  # --- Booking service + its OWN Postgres (database-per-service, low coupling) ---
+  booking-postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: booking
+    # Host 5435 -> container 5432 (5432 native, 5433 events, 5434 auth, 5435 booking).
+    ports:
+      - "5435:5432"
+    volumes:
+      - bookingpgdata:/var/lib/postgresql/data
+      - ./services/booking/db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d booking"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  booking:
+    build: ./services/booking
+    # Shared JWT_SECRET (gitignored) so booking can VERIFY tokens auth issued.
+    env_file:
+      - ./services/booking/.env
+    environment:
+      DATABASE_URL: postgres://app:app@booking-postgres:5432/booking
+      PORT: "3003"
+    ports:
+      - "3003:3003"
+    depends_on:
+      booking-postgres:
+        condition: service_healthy
+    volumes:
+      - ./services/booking/src:/app/src
+
 volumes:
   pgdata:
   authpgdata:
+  bookingpgdata:

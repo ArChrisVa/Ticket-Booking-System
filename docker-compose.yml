@@ -1,6 +1,20 @@
-# Phase 0 — Postgres + the Events service.
-# More services (auth, booking, notification, gateway, rabbitmq) get added in later phases.
+# Ticket Booking Platform — full stack: gateway, auth, events, booking,
+# notification, RabbitMQ, and a Postgres per service.
 services:
+  # --- API Gateway: single front door (:3000) — reverse-proxies to all services ---
+  gateway:
+    build: ./services/gateway
+    environment:
+      PORT: "3000"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - auth
+      - events
+      - booking
+    volumes:
+      - ./services/gateway/src:/app/src
+
   postgres:
     image: postgres:16-alpine
     environment:

@@ -1,4 +1,3 @@
-
 import { pool } from '../db';
 
 export const getSeatById = async (seat_id: string) => {
@@ -35,4 +34,50 @@ export const createBooking = async ( booking : {
     )
 
     return result.rows[0];
+}
+
+// Transaction query. Locked db actions together to avoid race condition.
+export const reserveSeat = async (reservation: {
+    user_id: string;
+    seat_id: string;
+    event_id: string;
+}) => {
+
+    const client = await pool.connect();
+
+    try {
+        await client.query('BEGIN');
+
+        const seatRes = await client.query(
+            `SELECT id, status
+               FROM seats
+              WHERE id = $1
+              FOR UPDATE`,
+            [reservation.seat_id]
+        );
+
+        const seat = seatRes.rows[0];
+        if (!seat) throw new Error('Seat does not exist');
+        if (seat.status !== 'available') throw new Error('Seat is unavailable');
+
+        await client.query(
+            `UPDATE seats SET status = 'booked' WHERE id = $1`,
+            [reservation.seat_id]
+        );
+
+        const bookingRes = await client.query(
+            `INSERT INTO bookings (user_id, seat_id, event_id)
+             VALUES ($1, $2, $3)
+             RETURNING *`,
+            [reservation.user_id, reservation.seat_id, reservation.event_id]
+        );
+
+        await client.query('COMMIT');
+        return bookingRes.rows[0];
+    } catch (err) {
+        await client.query('ROLLBACK'); 
+        throw err;
+    } finally {
+        client.release(); 
+    }
 }

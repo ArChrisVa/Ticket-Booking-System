@@ -11,6 +11,15 @@ asynchronous messaging, and an API gateway.
 
 ## Architecture
 
+![Architecture diagram of the ticket booking platform](docs/architecture.png)
+
+*An API Gateway (`:3000`) fronts all services. Auth issues a JWT (shared secret) → Events
+& Booking verify it locally (stateless). Each service owns its own database
+(database-per-service / low coupling). Booking publishes `booking.confirmed` to RabbitMQ;
+Notification consumes it asynchronously.*
+
+<details><summary>Text version (ASCII)</summary>
+
 ```
                          ┌──────────────────────────┐
         client  ───────► │   API Gateway  :3000     │   reverse proxy + rate limiting
@@ -34,10 +43,8 @@ asynchronous messaging, and an API gateway.
                                                     │  Notification    │ → ✉ email
                                                     │     :3004        │
                                                     └──────────────────┘
-
-  Auth issues a JWT (shared secret) → Events & Booking verify it locally (stateless).
-  Each service owns its own database (database-per-service / low coupling).
 ```
+</details>
 
 ## Tech stack
 - **TypeScript + Node.js** (Express)

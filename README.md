@@ -1,4 +1,4 @@
-# 🎟️ Ticket Booking Platform
+# Ticket Booking Platform
 
 An **event-driven microservices backend** for booking event tickets, built to practice
 real-world backend system design — database performance, security, concurrency control,
@@ -62,7 +62,7 @@ asynchronous messaging, and an API gateway.
 
 ## What this project demonstrates
 
-### 🗄️ Database performance — indexing & query planning
+### Database performance — indexing & query planning
 Seeded the events table to **100,000 rows**, then optimised the search query:
 - Diagnosed a slow query with `EXPLAIN ANALYZE` → a **sequential scan** examining all
   100k rows (98% discarded by filter).
@@ -71,7 +71,7 @@ Seeded the events table to **100,000 rows**, then optimised the search query:
 - Learned the **leftmost-prefix rule** (why a `(city, category, date)` index helps
   `city`-led queries but not `category`-only ones).
 
-### 🔐 Authentication & security
+### Authentication & security
 - **bcrypt** password hashing (salted, deliberately slow) — never plaintext.
 - **Stateless JWT auth**: auth signs tokens; events/booking verify them **locally**
   with a shared secret — no shared session store, no call back to auth.
@@ -79,21 +79,21 @@ Seeded the events table to **100,000 rows**, then optimised the search query:
 - OWASP touches: parameterised queries (SQL-injection safe), no user-enumeration on
   login, no client-controlled `role` (mass-assignment), rate limiting.
 
-### 🔒 Concurrency control — the overselling problem
+### Concurrency control — the overselling problem
 The centrepiece:
 - Built seat reservation **naively** (check-then-act) and **reproduced overselling** with
   a concurrent load script — 10 simultaneous requests booked **one seat 8 times**.
 - Fixed it with a **database transaction + pessimistic row lock** (`SELECT … FOR UPDATE`),
   so the check-and-book is atomic. After the fix: exactly **1 success, 9 rejected**.
 
-### 📨 Event-driven architecture
+### Event-driven architecture
 - Booking **publishes** `booking.confirmed` to RabbitMQ and responds immediately —
   it doesn't block on side-effects (e.g. sending email).
 - Notification **consumes** the queue independently.
 - **Decoupled** (booking doesn't know notification exists) and **resilient** (messages
   wait safely in the queue if the consumer is down; delivered when it returns).
 
-### 🚪 API Gateway
+### API Gateway
 - A single front door (`:3000`) reverse-proxies `/auth`, `/events`, `/bookings` to the
   right internal service — clients never touch internal ports.
 - **Central rate limiting** (100 req/IP/min → `429`) protects every service at once.

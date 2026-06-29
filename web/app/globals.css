@@ -1,0 +1,370 @@
+/* Eventbrite-ish theme: white surfaces, orange accent, dark-purple ink. */
+:root {
+  --accent: #d1410c;
+  --accent-dark: #b6360a;
+  --ink: #1e0a3c;
+  --muted: #6f7287;
+  --line: #eeedf2;
+  --bg: #ffffff;
+  --soft: #f8f7fa;
+  --ok: #1a7f4b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ---------- buttons ---------- */
+.btn {
+  appearance: none;
+  border: 0;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.btn:hover {
+  background: var(--accent-dark);
+}
+.btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.btn.ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.btn.ghost:hover {
+  background: var(--soft);
+}
+.btn.full {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+}
+
+/* ---------- header ---------- */
+.hdr {
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 20;
+}
+.hdr-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.logo {
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--accent);
+}
+.hdr-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hdr-email {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ---------- hero ---------- */
+.hero {
+  background: linear-gradient(135deg, #fdf0e9, #f6f0ff);
+  padding: 56px 20px 48px;
+  text-align: center;
+}
+.hero h1 {
+  font-size: 38px;
+  margin: 0 0 8px;
+}
+.hero p {
+  color: var(--muted);
+  margin: 0 0 22px;
+  font-size: 16px;
+}
+.search {
+  display: flex;
+  gap: 8px;
+  max-width: 540px;
+  margin: 0 auto;
+}
+.search input {
+  flex: 1;
+  padding: 12px 14px;
+  border: 1px solid #d8d6e0;
+  border-radius: 8px;
+  font-size: 15px;
+  background: #fff;
+}
+.search input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ---------- category pills ---------- */
+.pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 26px 0 8px;
+}
+.pill {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 20px;
+  padding: 7px 15px;
+  font-size: 13px;
+  cursor: pointer;
+  text-transform: capitalize;
+}
+.pill:hover {
+  border-color: var(--accent);
+}
+.pill.on {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+}
+
+/* ---------- event grid ---------- */
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 10px 0;
+}
+.small {
+  font-size: 12.5px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+  padding: 8px 0 40px;
+}
+.card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  transition: box-shadow 0.15s, transform 0.15s;
+  display: flex;
+  flex-direction: column;
+}
+.card:hover {
+  box-shadow: 0 8px 24px rgba(30, 10, 60, 0.12);
+  transform: translateY(-2px);
+}
+.card-img {
+  height: 120px;
+  display: grid;
+  place-items: center;
+  font-size: 44px;
+  background: linear-gradient(135deg, #fde4d8, #ece4fb);
+}
+.card-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.card-date {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 12.5px;
+  text-transform: uppercase;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.3;
+}
+.card-venue {
+  color: var(--muted);
+  font-size: 13px;
+}
+.card-cat {
+  align-self: flex-start;
+  margin-top: 4px;
+  font-size: 11px;
+  text-transform: capitalize;
+  color: var(--muted);
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 2px 9px;
+}
+
+/* ---------- detail page ---------- */
+.detail {
+  padding-top: 22px;
+  padding-bottom: 50px;
+}
+.back {
+  color: var(--muted);
+  font-size: 14px;
+}
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: 16px;
+}
+@media (max-width: 760px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.detail-img {
+  height: 280px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 90px;
+  background: linear-gradient(135deg, #fde4d8, #ece4fb);
+}
+.detail-title {
+  font-size: 30px;
+  margin: 10px 0 12px;
+}
+.detail-meta {
+  color: var(--muted);
+  margin: 4px 0;
+}
+.book-box {
+  margin-top: 22px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px;
+  background: var(--soft);
+}
+.book-box h3 {
+  margin: 0 0 6px;
+}
+.book-box input {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid #d8d6e0;
+  border-radius: 8px;
+  font-size: 15px;
+  margin-top: 8px;
+}
+.book-box input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ---------- feedback ---------- */
+.err {
+  color: var(--accent-dark);
+  font-size: 13.5px;
+  margin: 10px 0 0;
+}
+.ok {
+  color: var(--ok);
+  font-weight: 600;
+  font-size: 14px;
+  margin: 12px 0 0;
+}
+
+/* ---------- auth modal ---------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 10, 60, 0.45);
+  display: grid;
+  place-items: center;
+  z-index: 50;
+}
+.modal {
+  width: 360px;
+  max-width: calc(100vw - 40px);
+  background: #fff;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+.modal-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.modal-tabs button {
+  flex: 1;
+  padding: 9px;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--muted);
+}
+.modal-tabs button.on {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+}
+.modal label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.modal input {
+  width: 100%;
+  margin-top: 5px;
+  padding: 10px 12px;
+  border: 1px solid #d8d6e0;
+  border-radius: 8px;
+  font-size: 14px;
+}
+.modal input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ---------- footer ---------- */
+.footer {
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12.5px;
+  text-align: center;
+  padding: 22px;
+  margin-top: 30px;
+}

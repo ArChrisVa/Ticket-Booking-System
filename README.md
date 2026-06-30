@@ -2,10 +2,12 @@
 
 An **event-driven microservices backend** for booking event tickets, built to practice
 real-world backend system design — database performance, security, concurrency control,
-asynchronous messaging, and an API gateway.
+asynchronous messaging, and an API gateway. A lightweight **Next.js storefront** sits on
+top so the whole system is clickable end-to-end.
 
-> Learning-focused but production-shaped: 5 services, a database per service, a message
-> broker, JWT auth, and a hand-built API gateway — all orchestrated with Docker Compose.
+> Learning-focused but production-shaped: 5 backend services, a database per service, a
+> message broker, JWT auth, and a hand-built API gateway — all orchestrated with Docker
+> Compose — plus an Eventbrite-style Next.js front end that talks only to the gateway.
 
 ---
 
@@ -13,14 +15,19 @@ asynchronous messaging, and an API gateway.
 
 ![Architecture diagram of the ticket booking platform](docs/architecture.png)
 
-*An API Gateway (`:3000`) fronts all services. Auth issues a JWT (shared secret) → Events
-& Booking verify it locally (stateless). Each service owns its own database
-(database-per-service / low coupling). Booking publishes `booking.confirmed` to RabbitMQ;
-Notification consumes it asynchronously.*
+*A Next.js storefront (`:3030`) calls the API Gateway (`:3000`), which fronts all services.
+Auth issues a JWT (shared secret) → Events & Booking verify it locally (stateless). Each
+service owns its own database (database-per-service / low coupling). Booking publishes
+`booking.confirmed` to RabbitMQ; Notification consumes it asynchronously.*
 
 <details><summary>Text version (ASCII)</summary>
 
 ```
+                  ┌──────────────────────────┐
+                  │  Next.js storefront :3030 │   Eventbrite-style UI
+                  └───────────┬──────────────┘
+                              │ /api/* (same-origin proxy → no CORS)
+                              ▼
                          ┌──────────────────────────┐
         client  ───────► │   API Gateway  :3000     │   reverse proxy + rate limiting
                          └───────────┬──────────────┘
@@ -53,10 +60,12 @@ Notification consumes it asynchronously.*
 - **JWT** (`jsonwebtoken`) + **bcrypt** for auth
 - **Docker Compose** for local orchestration
 - Hand-built **API Gateway** (`http-proxy-middleware` + `express-rate-limit`)
+- **Next.js (React)** storefront — an Eventbrite-style UI that talks only to the gateway
 
 ## Services
 | Component | Port | Role |
 |---|---|---|
+| `web` (storefront) | 3030 | Next.js UI (Eventbrite-style) — browse/search, login, book; proxies `/api/*` to the gateway. Run with `npm run dev`. |
 | `gateway` | 3000 | Single entry point — reverse-proxy routing + central rate limiting |
 | `events` | 3001 | Event catalogue: search/list/create (admin). 100k seeded rows. |
 | `auth` | 3002 | Register / login, issues JWTs, bcrypt password hashing |
@@ -110,16 +119,28 @@ The centrepiece:
 ## Getting started
 
 ### Prerequisites
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- (Optional) Node 20+ for IDE tooling / running services outside Docker
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) — for the backend
+- Node 20+ — for the Next.js storefront (and optional IDE tooling)
 
-### Run everything
+### Run the backend
 ```bash
 docker compose up --build
 ```
 This starts the gateway, all services, three Postgres instances, and RabbitMQ.
 
-### Try it (all through the gateway on :3000)
+### Run the storefront (Next.js)
+The front end runs outside Docker for fast dev hot-reload:
+```bash
+cd web
+npm install
+npm run dev
+```
+Then open **http://localhost:3030**. The browser calls same-origin `/api/*`, which Next
+proxies to the gateway on `:3000` (so there's no CORS to configure).
+
+### Try it
+Use the **storefront** at http://localhost:3030 (browse → sign up → book), or hit the API
+directly through the gateway on `:3000`:
 ```bash
 # register + login
 curl -X POST http://localhost:3000/auth/register -H "Content-Type: application/json" \

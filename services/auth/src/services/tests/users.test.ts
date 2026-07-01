@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { registerUser } from "../users";
 import { findUserByEmail, createUser } from "../../repositories/users";
-import { json } from "stream/consumers";
 
 // Replace the real repository with fakes (hoisted to the top automatically).
 vi.mock("../../repositories/users");
@@ -48,4 +47,19 @@ describe("registerUser", () => {
     expect(result.email).toBe("a@b.com");
     expect(result.id).toBe(1);
   });
+
+  it("Email is already registered", async () => {
+    vi.mocked(findUserByEmail).mockResolvedValue({
+        id: 1,
+        email: "a@b.com",
+        role: "user",
+        created_at: "2026-01-01T00:00:00.000Z",
+        password_hash: "some_hashed_value",
+    } as any);
+
+    await expect(
+    registerUser({ email: "a@b.com", password: "secret" })
+    ).rejects.toThrow("Email is already registered");
+
+  })
 });

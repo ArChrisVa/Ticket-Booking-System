@@ -18,6 +18,18 @@ export type Booking = {
   created_at: string;
 };
 
+export type SeatStatus = "available" | "reserved" | "booked";
+
+export type Seat = {
+  id: number;
+  event_id: number;
+  section: string;
+  row_label: string;
+  seat_number: number;
+  price_cents: number;
+  status: SeatStatus;
+};
+
 async function req(path: string, init?: RequestInit) {
   const res = await fetch(`/api${path}`, {
     ...init,
@@ -69,5 +81,15 @@ export function book(
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
     body: JSON.stringify({ seat_id, event_id }),
+  });
+}
+
+// The booking service requires a token to view seats (requireAuth on the GET).
+export function getEventSeats(
+  token: string,
+  eventId: string | number
+): Promise<Seat[]> {
+  return req(`/bookings/seats/${eventId}`, {
+    headers: { Authorization: `Bearer ${token}` },
   });
 }

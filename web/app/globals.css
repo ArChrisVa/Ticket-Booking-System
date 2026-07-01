@@ -290,6 +290,125 @@ a {
   border-color: var(--accent);
 }
 
+/* ---------- seat map ---------- */
+.seatmap-gate {
+  text-align: center;
+  padding: 10px 0 4px;
+}
+.seatmap-gate h3 {
+  margin: 0 0 6px;
+}
+.seatmap-gate .btn {
+  margin-top: 10px;
+}
+
+.seatmap {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.stage {
+  text-align: center;
+  letter-spacing: 6px;
+  font-size: 11px;
+  color: var(--muted);
+  background: #ece9f1;
+  border-radius: 6px;
+  padding: 6px;
+}
+.seatmap-section h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+.seatmap-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.seatmap-rowlabel {
+  width: 18px;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+}
+.seat {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-size: 11px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  transition: transform 0.1s;
+}
+.seat.available {
+  background: #e6f4ea;
+  border-color: #86cca2;
+  color: #1a7f4b;
+}
+.seat.available:hover {
+  transform: scale(1.12);
+  border-color: #3f8f5b;
+}
+.seat.reserved {
+  background: #fdf0d5;
+  border-color: #e6c079;
+  color: #a86a12;
+  cursor: not-allowed;
+}
+.seat.booked {
+  background: #e7e7ea;
+  border-color: #cfcfd6;
+  color: #9a9aa5;
+  cursor: not-allowed;
+}
+.seat.selected {
+  background: var(--accent);
+  border-color: var(--accent-dark);
+  color: #fff;
+  box-shadow: 0 0 0 2px rgba(209, 65, 12, 0.3);
+}
+
+.seatmap-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 12px;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+.seatmap-legend .sw {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  vertical-align: -1px;
+  margin-right: 5px;
+  border: 1px solid;
+}
+.sw.available { background: #e6f4ea; border-color: #86cca2; }
+.sw.reserved { background: #fdf0d5; border-color: #e6c079; }
+.sw.booked { background: #e7e7ea; border-color: #cfcfd6; }
+.sw.selected { background: var(--accent); border-color: var(--accent-dark); }
+
+.reserve-bar {
+  position: sticky;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: 0 6px 20px rgba(30, 10, 60, 0.12);
+}
+
 /* ---------- feedback ---------- */
 .err {
   color: var(--accent-dark);

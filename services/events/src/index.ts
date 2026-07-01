@@ -1,6 +1,7 @@
 import express from "express";
 import { pool } from "./db";
 import eventsRouter from "./routes/events";
+import { initMessaging } from "./messaging";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
@@ -22,3 +23,5 @@ app.get("/health", async (_req, res) => {
 app.listen(PORT, () => {
   console.log(`[events] listening on port ${PORT}`);
 });
+
+initMessaging().catch((e) => console.error("[event] messaging init failed", e));

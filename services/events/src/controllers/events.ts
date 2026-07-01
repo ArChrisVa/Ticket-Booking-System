@@ -1,9 +1,11 @@
 import { createEvent, getEvent, listEvents } from '../services/events';
 import { Request, Response } from 'express';  
+import { publishEventCreated } from '../messaging';
 
 const create = async(req: Request, res: Response) => {
     try {
         const event = await createEvent(req.body)
+        publishEventCreated(event);
         res.status(201).json(event);
     } catch (err) {
         res.status(400).json({ error: (err as Error).message })

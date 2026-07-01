@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { reserveSeat } from '../services/booking';
+import { reserveSeat, getSeatsByEventId } from '../services/booking';
 import { publishBookingConfirmed } from '../messaging';
 
 const reserve = async (req: Request, res: Response) => {
@@ -13,4 +13,15 @@ const reserve = async (req: Request, res: Response) => {
     }
 }
 
-export { reserve }
+const getEventSeats = async (req: Request, res: Response) => {
+    try{
+        const eventId = req.params.event_id
+
+        const seats = await getSeatsByEventId(eventId)
+        res.status(200).json(seats)
+    }catch(err){
+        res.status(400).json({ error: (err as Error).message })
+    }
+}
+
+export { reserve, getEventSeats  }

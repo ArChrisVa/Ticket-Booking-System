@@ -45,11 +45,14 @@ services:
       - ./services/events/.env
     environment:
       DATABASE_URL: postgres://app:app@postgres:5432/tickets
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672   # events PUBLISHES event.created here
       PORT: "3001"
     # No host port published — internal only. Reachable on the Docker network as
     # events:3001 (the gateway proxies to it). NOT directly accessible from the host.
     depends_on:
       postgres:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
     # Mount source for hot-reload in dev (tsx watch). node_modules stays in the image.
     volumes:

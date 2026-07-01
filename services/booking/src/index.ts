@@ -2,6 +2,7 @@ import express from "express";
 import { pool } from "./db";
 import bookingRouter from "./routes/booking";
 import { initMessaging } from "./messaging";
+import { startConsumer } from "./broker/consumer";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3003;
@@ -24,3 +25,4 @@ app.listen(PORT, () => {
 });
 
 initMessaging().catch((e) => console.error("[booking] messaging init failed", e));
+startConsumer().catch((e) => console.error("[event] consumer failed", e));
